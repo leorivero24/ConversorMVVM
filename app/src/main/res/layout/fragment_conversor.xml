@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <EditText
+        android:id="@+id/editTextDolar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Dólares"
+        android:inputType="numberDecimal"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <EditText
+        android:id="@+id/editTextEuro"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Euros"
+        android:inputType="numberDecimal"
+        app:layout_constraintTop_toBottomOf="@id/editTextDolar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp"/>
+
+    <!-- RadioGroup para que solo se pueda seleccionar un RadioButton -->
+    <RadioGroup
+        android:id="@+id/radioGroupConversion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/editTextEuro"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="16dp">
+
+        <RadioButton
+            android:id="@+id/radioDolarAEuro"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Dólares → Euros"/>
+
+        <RadioButton
+            android:id="@+id/radioEuroADolar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Euros → Dólares"
+            android:layout_marginStart="16dp"/>
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/btnConvertir"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Convertir"
+        app:layout_constraintTop_toBottomOf="@id/radioGroupConversion"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="24dp"/>
+
+    <EditText
+        android:id="@+id/editTextResultado"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Resultado"
+        android:inputType="none"
+        android:focusable="false"
+        android:clickable="false"
+        app:layout_constraintTop_toBottomOf="@id/btnConvertir"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="24dp"/>
+</androidx.constraintlayout.widget.ConstraintLayout>
