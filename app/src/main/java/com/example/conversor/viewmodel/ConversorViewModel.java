@@ -4,69 +4,57 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.conversor.model.Conversor;
+
 public class ConversorViewModel extends ViewModel {
 
-    private final MutableLiveData<String> resultado = new MutableLiveData<>("");
-    private final MutableLiveData<String> mensaje = new MutableLiveData<>();
+    private Conversor conversor = new Conversor();
 
-    // RadioButtons
-    private final MutableLiveData<Boolean> radioDolarAEuroSeleccionado = new MutableLiveData<>(false);
-    private final MutableLiveData<Boolean> radioEuroADolarSeleccionado = new MutableLiveData<>(false);
-
-    private final MutableLiveData<Boolean> direccionConversion = new MutableLiveData<>(); // true=Dólar→Euro, false=Euro→Dólar
-
-    private String valorDolar = "";
-    private String valorEuro = "";
+    private MutableLiveData<String> resultado = new MutableLiveData<>();
+    private MutableLiveData<String> mensaje = new MutableLiveData<>();
+    private MutableLiveData<Boolean> radioDolarAEuroSeleccionado = new MutableLiveData<>(false);
+    private MutableLiveData<Boolean> radioEuroADolarSeleccionado = new MutableLiveData<>(false);
 
     // Getters LiveData
     public LiveData<String> getResultado() { return resultado; }
     public LiveData<String> getMensaje() { return mensaje; }
     public LiveData<Boolean> getRadioDolarAEuroSeleccionado() { return radioDolarAEuroSeleccionado; }
     public LiveData<Boolean> getRadioEuroADolarSeleccionado() { return radioEuroADolarSeleccionado; }
-    public LiveData<Boolean> getDireccionConversion() { return direccionConversion; }
 
-    // Valores de entrada
-    public void setValorDolar(String valorDolar) { this.valorDolar = valorDolar; }
-    public void setValorEuro(String valorEuro) { this.valorEuro = valorEuro; }
+    // Entrada desde UI
+    public void setValorDolar(String valor) { conversor.setValorDolar(valor); }
+    public void setValorEuro(String valor) { conversor.setValorEuro(valor); }
 
-    // Selección de RadioButtons
+    // Selección de conversión
     public void seleccionarDolarAEuro() {
         radioDolarAEuroSeleccionado.setValue(true);
         radioEuroADolarSeleccionado.setValue(false);
-        direccionConversion.setValue(true);
     }
 
     public void seleccionarEuroADolar() {
-        radioDolarAEuroSeleccionado.setValue(false);
         radioEuroADolarSeleccionado.setValue(true);
-        direccionConversion.setValue(false);
+        radioDolarAEuroSeleccionado.setValue(false);
     }
 
-    // Lógica de conversión
+    // Conversión
     public void convertir() {
-        if (direccionConversion.getValue() == null) {
-            mensaje.setValue("Seleccione una dirección de conversión");
-            return;
-        }
-
-        try {
-            if (direccionConversion.getValue()) { // Dólar → Euro
-                if (valorDolar.isEmpty()) {
-                    mensaje.setValue("Ingrese un valor en dólares");
-                    return;
-                }
-                double res = Double.parseDouble(valorDolar) * 0.92; // ejemplo
-                resultado.setValue(String.format("%.2f €", res));
-            } else { // Euro → Dólar
-                if (valorEuro.isEmpty()) {
-                    mensaje.setValue("Ingrese un valor en euros");
-                    return;
-                }
-                double res = Double.parseDouble(valorEuro) * 1.09; // ejemplo
-                resultado.setValue(String.format("%.2f $", res));
+        if (radioDolarAEuroSeleccionado.getValue() != null && radioDolarAEuroSeleccionado.getValue()) {
+            String res = conversor.convertirDolarAEuro();
+            if (res.isEmpty()) {
+                mensaje.setValue("Ingrese un valor en dólares");
+            } else {
+                resultado.setValue(res); // Ej: "1.00 USD = 0.92 EUR"
             }
-        } catch (NumberFormatException e) {
-            mensaje.setValue("Valor inválido");
+        } else if (radioEuroADolarSeleccionado.getValue() != null && radioEuroADolarSeleccionado.getValue()) {
+            String res = conversor.convertirEuroADolar();
+            if (res.isEmpty()) {
+                mensaje.setValue("Ingrese un valor en euros");
+            } else {
+                resultado.setValue(res); // Ej: "1.00 EUR = 1.09 USD"
+            }
+        } else {
+            mensaje.setValue("Seleccione una dirección de conversión");
         }
     }
+
 }
